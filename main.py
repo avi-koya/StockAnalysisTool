@@ -8,7 +8,7 @@ from sklearn.utils import shuffle
 
 
 # @hidden_cell
-
+key = 
 
 equity = input('Equity symbol: ')
 
@@ -26,15 +26,40 @@ data['change'] = data['close'] - data['open']
 
 data['SMA5'] = data['close'].rolling(5).mean()
 
+stocks = int(input("Number owned: "))
+
+spent = float(input("Bought for: ")) * stocks
+
+data['profit'] = (data['close'] * stocks) - spent
+
+print(spent)
+
 print(data.head())
 
+plt.plot(data['timestamp'], data['close'])
+plt.xticks(rotation=45, fontsize=6)
+ax = plt.gca()
+#ax.axes.get_xaxis().set_ticks()
+xticks = ax.get_xticklabels()
+labels = []
+for x in range(0, len(data['timestamp'])):
+    if(x == 0 or x == len(data['timestamp']) - 1):
+        labels.append(data['timestamp'][x])
+    else:
+        labels.append("")
+ax.set_xticklabels(labels)
+ax.invert_xaxis()
+#ax.axes.get_xaxis().set_ticks(data['timestamp'][len(data['timestamp']) - 1])
+
+
+plt.show()
 
 def cleanData(dataSet):
     dataNew = dataSet.dropna()
     return dataNew
 
 def predictClose(dataSet):
-    dataNew = cleanData(dataSet[['SMA5', 'close']])
+    dataNew = cleanData(dataSet[['SMA5', 'close', 'volume']])
     print(dataNew.head())
     predict = 'close'
     X = np.array(dataNew.drop([predict], axis=1))
@@ -55,8 +80,7 @@ def predictClose(dataSet):
         print(predictions[x], x_test[x], y_test[x], y_test[x] - predictions[x])
     
 
-"""data.plot(x ="timestamp", y = "close")
-plt.scatter(x=data["open"], y = data["close"])
-plt.show()"""
+plt.scatter(x=data['volume'], y=data['close'])
+plt.show()
 
 predictClose(data)
