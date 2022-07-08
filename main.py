@@ -8,7 +8,7 @@ from sklearn.utils import shuffle
 
 
 # @hidden_cell
-key = 
+key = '9HIHFNRD0J1APKU9&datatype=csv'
 
 equity = input('Equity symbol: ')
 
@@ -36,27 +36,11 @@ print(spent)
 
 print(data.head())
 
-plt.plot(data['timestamp'], data['close'])
-plt.xticks(rotation=45, fontsize=6)
-ax = plt.gca()
-#ax.axes.get_xaxis().set_ticks()
-xticks = ax.get_xticklabels()
-labels = []
-for x in range(0, len(data['timestamp'])):
-    if(x == 0 or x == len(data['timestamp']) - 1):
-        labels.append(data['timestamp'][x])
-    else:
-        labels.append("")
-ax.set_xticklabels(labels)
-ax.invert_xaxis()
-#ax.axes.get_xaxis().set_ticks(data['timestamp'][len(data['timestamp']) - 1])
 
-
-plt.show()
 
 def cleanData(dataSet):
-    dataNew = dataSet.dropna()
-    return dataNew
+    dataSet['SMA5'].fillna(dataSet['close'], inplace=True)
+    return dataSet
 
 def predictClose(dataSet):
     dataNew = cleanData(dataSet[['SMA5', 'close', 'volume']])
@@ -75,12 +59,31 @@ def predictClose(dataSet):
     print("Intercept: \n", linear.intercept_)
 
     predictions = linear.predict(x_test)
-
+    
     for x in range(len(predictions)):
         print(predictions[x], x_test[x], y_test[x], y_test[x] - predictions[x])
     
 
-plt.scatter(x=data['volume'], y=data['close'])
-plt.show()
+#plt.scatter(x=data['volume'], y=data['close'])
+
+#plt.show()
 
 predictClose(data)
+plt.plot(data['timestamp'], data['close'])
+plt.xticks(rotation=45, fontsize=6)
+ax = plt.gca()
+#ax.axes.get_xaxis().set_ticks()
+xticks = ax.get_xticklabels()
+labels = []
+for x in range(0, len(data['timestamp'])):
+    if(x == 0 or x == len(data['timestamp']) - 1):
+        labels.append(data['timestamp'][x])
+    else:
+        labels.append("")
+ax.axes.get_xaxis().set_ticks(labels)
+ax.invert_xaxis()
+#ax.axes.get_xaxis().set_ticks(data['timestamp'][len(data['timestamp']) - 1])
+data["SMA5"].fillna(data['close'], inplace=True)
+plt.plot(data['timestamp'], data['SMA5'])
+plt.axhline(y=spent/stocks, color='r')
+plt.show()
