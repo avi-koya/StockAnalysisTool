@@ -8,7 +8,7 @@ from sklearn.utils import shuffle
 
 
 # @hidden_cell
-key = '9HIHFNRD0J1APKU9&datatype=csv'
+key ="""API KEY"""
 
 equity = input('Equity symbol: ')
 
